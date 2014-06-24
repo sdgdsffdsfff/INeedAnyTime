@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="1746292695">
+    <data-source source="LOCAL" name="Django default" uuid="5184f07f-2306-412e-8a01-c9e31727d946">
+      <driver-ref>mysql</driver-ref>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://127.0.0.1:3306/natdb</jdbc-url>
+      <user-name>root</user-name>
+      <user-password>df9bdf98df99df9edf9fdf9c</user-password>
+      <libraries />
+    </data-source>
+    <data-source source="LOCAL" name="Django reportplatform" uuid="7d5528b6-1de1-4699-a21a-1a7c83b58c5d">
+      <driver-ref>mysql</driver-ref>
+      <jdbc-driver>com.mysql.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://192.168.81.146:55666/reportplatform</jdbc-url>
+      <user-name>root</user-name>
+      <user-password>dfd9dfc5dfc4dfcbdfd8</user-password>
+      <libraries />
+    </data-source>
+  </component>
+</project>
+

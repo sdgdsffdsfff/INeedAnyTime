@@ -1,0 +1,237 @@
+{% load extras %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>I Need Any Time</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/theme.css">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="http://cdn.bootcss.com/jquery/1.10.2/jquery.min.js"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="/static/js/bootstrap.min.js"></script>
+
+    <script type="text/javascript">
+        //保存当前被修改服务器的IP
+        currentsv="";
+        jQuery.fn.extend({
+            getst: function() {
+                obj=$(this);
+                $.post("/ajax/getServerStatus/",{serverip: $(this).attr('serverip')},function(result){
+                    $(".timeinfo").removeAttr("disabled");
+                    obj.text(result);
+                    obj.attr("disabled",true);
+            });
+            }
+        });
+
+        jQuery.fn.extend({
+            setst: function() {
+                obj=$(this);
+                newtimeval=($("#sbyear").val()+"-"+$("#sbmon").val()+"-"+$("#sbday").val()+" "+$("#sbhour").val()+":"+$("#sbmin").val()+":"+$("#sbsec").val()).trim().toString();
+                $.post("/ajax/setServerNewTime/",{serverip: currentsv,newtime:newtimeval},function(result){
+                    $('#timeccmodal').modal('hide');
+                    if(result==""){
+                        //$("#successdlg").css("display","block");
+                        $("#successdlg").fadeIn(1500).delay(800).fadeOut(1500);
+                    }
+                    else{
+                        $("#errordlg").fadeIn(1500).delay(800).fadeOut(1500);
+                    }
+            });
+            }
+        });
+
+        $(document).ready(function(){
+            $(".timeinfo").click(function(){
+                $(".timeinfo").attr("disabled","true");
+                $(this).text("正在获取中...");
+                $(this).getst();
+            });
+
+            $(".maketime").click(function(){
+                currentsv=$(this).attr("serverip");
+            });
+
+            //提交新的时间
+            $("#submitnewtime").click(function(){
+                $(this).setst();
+            });
+
+            //传值到模态窗体中
+            $('#timeccmodal').on('shown.bs.modal', function (e) {
+
+                //获取当前时间
+                var d = new Date();
+                var vYear = d.getFullYear();
+                var vMon = d.getMonth() + 1;
+                var vDay = d.getDate();
+                var h = d.getHours();
+                var m = d.getMinutes();
+                var se = d.getSeconds();
+                if(se<=9){
+                    se="0"+se;
+                }
+                if(m<=9){
+                    m="0"+m;
+                }
+
+                //传值
+                $("#myModalLabel").text("修改 "+currentsv+" 服务器的时间");
+                $("#sbyear").val(vYear);
+                $("#sbmon").val(vMon);
+                $("#sbday").val(vDay);
+                $("#sbhour").val(h);
+                $("#sbmin").val(m);
+                $("#sbsec").val(se);
+
+            });
+        });
+
+
+    </script>
+
+</head>
+<body>
+<div id="header">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+<a class="navbar-brand" href="#">INeedAnyTime - {{ currentuser | getUsername }}</a>
+    <ul class="nav navbar-nav">
+            <li class="active"><a href="#">首页</a></li>
+            <li><a href="/admin">管理</a></li>
+            <li><a href="/logout">退出登陆</a></li>
+    </ul>
+    <p class="navbar-text navbar-right" style="padding-right: 20px;">
+        V1.0 Beta
+    </p>
+</nav>
+</div>
+<div id="timebody">
+
+<!-- Modal -->
+<div class="modal fade" id="timeccmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">修改成一个新的时间</h4>
+      </div>
+      <div class="modal-body">
+          <div class="well">如果想将服务器时间重置为当前时间,则不要修改任何时间参数,直接点击保存修改即可！NAT系统默认获取你本机的当前时间。</div>
+            <div class="input-group">
+                <input type="text" id="sbyear" class="form-control" value="">
+                <span class="input-group-addon">年</span>
+                <input type="text" id="sbmon" class="form-control" value="">
+                <span class="input-group-addon">月</span>
+                <input type="text" id="sbday" class="form-control" value="">
+                <span class="input-group-addon">日</span>
+                <input type="text" id="sbhour" class="form-control" value="">
+                <span class="input-group-addon">时</span>
+                <input type="text" id="sbmin" class="form-control" value="">
+                <span class="input-group-addon">分</span>
+                <input type="text" id="sbsec" class="form-control" value="">
+                <span class="input-group-addon">秒</span>
+            </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-primary" id="submitnewtime">确认修改</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div class="panel panel-primary">
+  <!-- Default panel contents -->
+  <div class="panel-heading">NeedAnyTime 控制面板</div>
+  <div class="panel-body">
+    <p>
+        <ul>
+        <li>NeedAnyTime是方便TE在设计测试场景时进行环境时间调整的一款在线工具</li>
+        <li>需要紧急添加服务器和部署NeedAnyTime服务,请直接Lync上找我,ID:tygong</li>
+        <li>使用过程中有任何建议,请联系管理员 tygong@Ctrip.com</li>
+        <li>锁定功能暂未开放</li>
+        </ul>
+    </p>
+  </div>
+  <!-- Table -->
+  <table class="table">
+          <thead>
+            <tr>
+              <th>编号</th>
+              <th>服务器地址</th>
+              <th>环境描述</th>
+              <th>NATServer状态</th>
+              <th>修改时间</th>
+              <th>被改次数</th>
+              <th>强制锁定</th>
+            </tr>
+          </thead>
+          <tbody>
+          {# 主循环 #}
+          {% for server in servers %}
+            <tr>
+              <td>{{ forloop.counter }}</td>
+              <td>{{ server.serverip }}</td>
+              <td>{{ server.serverenv }}</td>
+              <td><button type="button" class="timeinfo btn btn-info btn-xs" serverip="{{ server.serverip }}">获取服务状态</button></td>
+              <td><button type="button" class="maketime btn btn-warning btn-xs" data-toggle="modal" data-target="#timeccmodal" serverip="{{ server.serverip }}">修改时间</button></td>
+              <td><strong>{{ server.serverip | getCCcounts }}</strong></td>
+              <td><button type="button" class="lockserver btn btn-danger btn-xs" serverip="{{ server.serverip }}">我要锁定</button></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+<div class="panel-footer">Version:1.0.0 Beta</div>
+</div>
+
+<div class="alert alert-success alert-dismissable" id="successdlg">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+  <strong>修改成功!</strong>
+</div>
+
+<div class="alert alert-danger alert-dismissable" id="errordlg">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+  <strong>发生错误!请先检查服务器的服务状态或者直接联系管理员.</strong>
+</div>
+
+{# 日志区域 #}
+<div class="panel panel-info">
+  <!-- Default panel contents -->
+  <div class="panel-heading">实时日志刷新</div>
+  <!-- Table -->
+  <table class="table">
+          <tr>
+              <th>编号</th>
+              <th>修改人</th>
+              <th>被改服务器</th>
+              <th>被改服务器描述</th>
+              <th>改前时间</th>
+              <th>改后时间</th>
+              <th>日志记录时间</th>
+          </tr>
+          <tbody>
+          {# 主循环 #}
+          {% for log in logs %}
+            <tr>
+            {% if forloop.first %}
+              <td><span class="label label-danger">最新</span></td>
+                {% else %}
+              <td>{{ forloop.counter }}</td>
+            {% endif %}
+              <td>{{ log.ccman | getUsername }}</td>
+              <td>{{ log.ccserver.serverip }}</td>
+              <td>{{ log.ccserver.serverenv }}</td>
+              <td><span class="label label-danger">{{ log.ftime | date:"Y-m-d H:i:s" }}</span></td>
+              <td><span class="label label-success">{{ log.btime | date:"Y-m-d H:i:s" }}</span></td>
+              <td><span class="label label-default">{{ log.cctime | date:"Y-m-d H:i:s" }}</span></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+<div class="panel-footer"> > <a href="/admin">查看更多日志</a></div>
+</div>
+
+</div>
+</body>
+</html>

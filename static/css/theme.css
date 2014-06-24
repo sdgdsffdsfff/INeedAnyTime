@@ -1,0 +1,16 @@
+/*
+NeedAnyTime Theme
+*/
+
+body{
+    margin: 0;
+    padding: 0;
+}
+
+#header{ margin-bottom: 50px }
+
+#timebody{
+    padding: 25px;
+}
+
+#successdlg,#errordlg{ display: none; }
