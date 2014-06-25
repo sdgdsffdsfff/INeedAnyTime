@@ -1,4 +1,6 @@
 {% load extras %}
+{% load pagination_tags %}
+
 <!DOCTYPE html>
 <html>
 <head lang="en">
@@ -131,7 +133,7 @@
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 <a class="navbar-brand" href="#">INeedAnyTime - {{ currentuser | getUsername }}</a>
     <ul class="nav navbar-nav">
-            <li class="active"><a href="#">首页</a></li>
+            <li class="active"><a href="/">首页</a></li>
             <li><a href="/admin">管理</a></li>
             <li><a href="/logout">退出登陆</a></li>
     </ul>
@@ -177,14 +179,14 @@
 
 <div class="panel panel-primary">
   <!-- Default panel contents -->
-  <div class="panel-heading">NeedAnyTime 控制面板</div>
+  <div class="panel-heading">INeedAnyTime-控制面板</div>
   <div class="panel-body">
     <p>
         <ul>
         <div class="page-header">
         <h3>公告区 <small>使用须知</small></h3>
         </div>
-        <li>NeedAnyTime是方便TE在设计测试场景时进行环境时间调整的一款在线工具</li>
+        <li>INeedAnyTime是方便TE在设计测试场景时进行环境时间调整的一款在线工具</li>
         <li>需要紧急添加服务器和部署NeedAnyTime服务,请直接Lync上找我,ID:tygong</li>
         <li>使用过程中有任何建议,请联系管理员 tygong@Ctrip.com</li>
         </ul>
@@ -218,7 +220,7 @@
           {% endfor %}
           </tbody>
         </table>
-<div class="panel-footer">Version:1.0.0 Beta</div>
+<div class="panel-footer">V1.0 Beta</div>
 </div>
 
 <div class="alert alert-success alert-dismissable" id="successdlg">
@@ -248,13 +250,10 @@
           </tr>
           <tbody>
           {# 主循环 #}
+          {% autopaginate logs 8 %}
           {% for log in logs %}
             <tr>
-            {% if forloop.first %}
-              <td><span class="label label-danger">最新</span></td>
-                {% else %}
               <td>{{ forloop.counter }}</td>
-            {% endif %}
               <td>{{ log.ccman | getUsername }}</td>
               <td>{{ log.ccserver.serverip }}</td>
               <td>{{ log.ccserver.serverenv }}</td>
@@ -265,7 +264,8 @@
           {% endfor %}
           </tbody>
         </table>
-<div class="panel-footer"> > <a href="/admin">查看更多日志</a></div>
+
+<div class="panel-footer">{% paginate %}</div>
 </div>
 
 </div>

@@ -4,6 +4,7 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.http import HttpResponse,HttpResponseRedirect
 from AnyTimeHome.models import *
+from django.template import RequestContext
 
 #systemimport
 import xmlrpclib,time
@@ -20,7 +21,8 @@ def HomePage(request):
                 'servers':servers,
                 'currentuser':user,
                 'logs':logs,
-            }
+            },
+            context_instance=RequestContext(request)
         )
     else:
         return HttpResponseRedirect("/login")

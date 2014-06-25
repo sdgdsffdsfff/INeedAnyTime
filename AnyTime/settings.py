@@ -52,7 +52,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'AnyTimeHome',
-    'django_cas'
+    'django_cas',
+    'pagination',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -62,6 +63,17 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_cas.middleware.CASMiddleware',
+    'pagination.middleware.PaginationMiddleware',
+)
+
+#context
+TEMPLATE_CONTEXT_PROCESSORS = (
+    # 'django.core.context_processors.auth',
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.request',
 )
 
 ROOT_URLCONF = 'AnyTime.urls'
