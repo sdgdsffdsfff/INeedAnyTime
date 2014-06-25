@@ -12,6 +12,16 @@
     <script src="/static/js/bootstrap.min.js"></script>
 
     <script type="text/javascript">
+
+        //时区转换函数,北京时间转换成GMT
+        function calcTime(yy,mm,dd,hh,mi,sec) {
+                d = new Date(yy,mm,dd,hh,mi,sec);
+                utc = d.getTime() + (d.getTimezoneOffset() * 60000);
+                nd = new Date(utc);
+                //GMTTIME.=nd.getFullYear()+"-"+nd.getMonth()+"-"+nd.getDay()+" "+nd.getHours()+":"+nd.getHourMinute()+":"+nd.getHourMinuteSecond();
+                return nd;
+         }
+
         //保存当前被修改服务器的IP
         currentsv="";
         jQuery.fn.extend({
@@ -27,9 +37,33 @@
 
         jQuery.fn.extend({
             setst: function() {
+
                 obj=$(this);
-                newtimeval=($("#sbyear").val()+"-"+$("#sbmon").val()+"-"+$("#sbday").val()+" "+$("#sbhour").val()+":"+$("#sbmin").val()+":"+$("#sbsec").val()).trim().toString();
-                $.post("/ajax/setServerNewTime/",{serverip: currentsv,newtime:newtimeval},function(result){
+
+                //Time CC
+                yy=$("#sbyear").val();
+                mm=$("#sbmon").val();
+                dd=$("#sbday").val();
+                hh=$("#sbhour").val();
+                mi=$("#sbmin").val();
+                sec=$("#sbsec").val();
+
+                //计算GMT时间
+                newtimeval=(yy+"-"+mm+"-"+dd+" "+hh+":"+mi+":"+sec).trim().toString();
+                gmttime=calcTime(yy,mm,dd,hh,mi,sec);
+                gmtyy=gmttime.getFullYear();
+                gmtmm=gmttime.getMonth();
+                gmtdd=gmttime.getDate();
+                gmthh=gmttime.getHours();
+                gmtmi=gmttime.getMinutes();
+                gmtsec=gmttime.getSeconds();
+
+                //提交给服务器的是GMT时间
+                //alert(gmttime);
+                gmtfinaltime=gmtyy+"-"+gmtmm+"-"+gmtdd+" "+gmthh+":"+gmtmi+":"+gmtsec;
+                newtime=newtimeval=(yy+"-"+mm+"-"+dd+" "+hh+":"+mi+":"+sec).trim().toString();
+
+                $.post("/ajax/setServerNewTime/",{serverip: currentsv,newtime:gmtfinaltime,aftertime:newtime},function(result){
                     $('#timeccmodal').modal('hide');
                     if(result==""){
                         //$("#successdlg").css("display","block");
@@ -147,10 +181,12 @@
   <div class="panel-body">
     <p>
         <ul>
+        <div class="page-header">
+        <h3>公告区 <small>使用须知</small></h3>
+        </div>
         <li>NeedAnyTime是方便TE在设计测试场景时进行环境时间调整的一款在线工具</li>
         <li>需要紧急添加服务器和部署NeedAnyTime服务,请直接Lync上找我,ID:tygong</li>
         <li>使用过程中有任何建议,请联系管理员 tygong@Ctrip.com</li>
-        <li>锁定功能暂未开放</li>
         </ul>
     </p>
   </div>

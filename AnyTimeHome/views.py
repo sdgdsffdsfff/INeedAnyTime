@@ -52,7 +52,7 @@ def submitnewtime(request):
                     ccman=AuthUser(username=request.user.username),
                     ccserver=serverlist(serverip=request.POST["serverip"]),
                     ftime=ftimenow,
-                    btime=request.POST["newtime"],
+                    btime=request.POST["aftertime"],
                     cctime=nowtime
                 )
                 #保存
