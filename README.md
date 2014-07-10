@@ -19,12 +19,9 @@ XML-RPC+Win32API+Django
 Agent部署
 =============
 服务端的Agent写成了Windows标准服务
-安装服务:
 ```python
 python NeedAnyTimeRPCServer.py install
-
 ```
-启动服务
 ```python
 python NeedAnyTimeRPCServer.py start
 ```
